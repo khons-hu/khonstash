@@ -1,3 +1,5 @@
+import { t, locale, number, dateTime, time, errorText, initLanguage, refreshText } from './i18n.js';
+initLanguage();
 import {
   GAMES,
   cents,
@@ -11,7 +13,7 @@ const $ = (s) => document.querySelector(s),
   money = (n) =>
     n === null
       ? "—"
-      : new Intl.NumberFormat("en-IE", {
+      : new Intl.NumberFormat(locale, {
           style: "currency",
           currency: "EUR",
         }).format(n / 100);
@@ -28,16 +30,18 @@ let items = [],
   editing = null,
   busy = false,
   lastRequest = 0;
-const date = (s) => new Date(s).toLocaleString();
-function notice(text) {
-  $("#notice").textContent = text;
+const date = (s) => dateTime(s);
+let noticeRenderer=null;
+function notice(value) {
+  noticeRenderer=typeof value==='function'?value:()=>refreshText(value);
+  $("#notice").textContent = noticeRenderer();
 }
 try {
   const raw = localStorage.getItem(storageKey);
   if (raw) items = validateBackup(JSON.parse(raw));
 } catch {
   notice(
-    "Saved data could not be read. Export your current browser data before clearing storage.",
+    ()=>t("Saved data could not be read. Export your current browser data before clearing storage."),
   );
 }
 function save() {
@@ -46,7 +50,7 @@ function save() {
     return true;
   } catch {
     notice(
-      "Browser storage is unavailable or full. Download a backup before closing this page.",
+      ()=>t("Browser storage is unavailable or full. Download a backup before closing this page."),
     );
     return false;
   }
@@ -76,25 +80,25 @@ function render() {
   $("#net-total").textContent = priced ? money(net) : "—";
   $("#difference").textContent = matched ? money(matchedCost) : "—";
   $("#coverage").textContent = items.length
-    ? `${items.length}/12 items · ${priced} with saved prices · ${matched} with both cost and price. Totals use saved observations, not a live valuation.`
-    : "Add items to start your list.";
+    ? t`${number(items.length)}/12 items · ${number(priced)} with saved prices · ${number(matched)} with both cost and price. Totals use saved observations, not a live valuation.`
+    : t("Add items to start your list.");
   $("#add").disabled = items.length >= 12;
   $("#items").innerHTML = items.length
     ? items
         .map((item) => {
           const q = last(item);
           const target = q && item.target !== null && q.price <= item.target;
-          return `<article class="item"><div class="game">${escape(GAMES[item.appid])} · ×${item.quantity}</div><h2>${escape(item.name)}</h2><div class="price">${q ? money(q.price) : "Not checked yet"}</div><div class="meta">${q ? `${q.source === "manual" ? "Manually recorded" : "Lowest listing"} · ${escape(date(q.at))}<br>Estimated net: ${money(netEstimate(q.price))} per item` : "EUR prices · check when you need them"}</div>${target ? '<div class="target">↓ At or below your target</div>' : ""}<div class="actions"><button data-check="${escape(item.id)}" ${busy ? "disabled" : ""}>Check price</button><button data-detail="${escape(item.id)}">Notes & history</button><a href="${marketURL(item.appid, item.name)}" target="_blank" rel="noopener noreferrer">Steam ↗</a></div></article>`;
+          return t`<article class="item"><div class="game">${escape(GAMES[item.appid])} · ×${number(item.quantity)}</div><h2>${escape(item.name)}</h2><div class="price">${q ? money(q.price) : t("Not checked yet")}</div><div class="meta">${q ? t`${q.source === "manual" ? t("Manually recorded") : t("Lowest listing")} · ${escape(date(q.at))}<br>Estimated net: ${money(netEstimate(q.price))} per item` : t("EUR prices · check when you need them")}</div>${target ? t('<div class="target">↓ At or below your target</div>') : ""}<div class="actions"><button data-check="${escape(item.id)}" ${busy ? "disabled" : ""}>Check price</button><button data-detail="${escape(item.id)}">Notes & history</button><a href="${marketURL(item.appid, item.name)}" target="_blank" rel="noopener noreferrer">Steam ↗</a></div></article>`;
         })
         .join("")
-    : '<div class="empty"><h2>Your shelf is empty.</h2><p>Add a skin, case or another market item you actually care about.</p><button id="starter">Try with Revolution Case</button></div>';
+    : t('<div class="empty"><h2>Your shelf is empty.</h2><p>Add a skin, case or another market item you actually care about.</p><button id="starter">Try with Revolution Case</button></div>');
 }
 function openEditor(item = null) {
   editing = item?.id || null;
   const form = $("#item-form");
   form.reset();
   $("#form-error").textContent = "";
-  $("#editor-title").textContent = item ? "Edit item" : "Add an item";
+  $("#editor-title").textContent = item ? t("Edit item") : t("Add an item");
   if (item)
     for (const key of ["appid", "name", "quantity", "cost", "target", "notes"])
       form.elements[key].value = ["cost", "target"].includes(key)
@@ -119,9 +123,9 @@ $("#item-form").onsubmit = (event) => {
     });
     const id = `${item.appid}:${item.name}`;
     if (items.some((x) => x.id === id && x.id !== editing))
-      throw Error("That item is already on your shelf.");
+      throw Error(t("That item is already on your shelf."));
     if (!editing && items.length >= 12)
-      throw Error("Your shelf holds up to 12 items.");
+      throw Error(t("Your shelf holds up to 12 items."));
     const previous = items.find((x) => x.id === editing);
     const updated = {
       ...item,
@@ -134,31 +138,32 @@ $("#item-form").onsubmit = (event) => {
     render();
     $("#edit").close();
   } catch (error) {
-    $("#form-error").textContent = error.message;
+    $("#form-error").textContent = errorText(error);
   }
 };
-function detail(item) {
+let detailed=null;function detail(item) {
+  detailed=item;
   const q = last(item);
   $("#detail-content").innerHTML =
-    `<div class="eyebrow">${escape(GAMES[item.appid])}</div><h2>${escape(item.name)}</h2><p>${item.quantity} item(s) · recorded cost ${money(item.cost)} each · target ${money(item.target)}</p>${item.cost !== null ? `<p>Estimated break-even buyer price: <strong>${money(buyerCost(item.cost))}</strong> each.</p>` : ""}<p class="notes">${escape(item.notes || "No notes yet.")}</p><div class="actions"><button id="edit-current">Edit item</button><button id="remove-current">Remove from shelf</button></div><form class="manual" id="manual"><label>Record an observed EUR listing price<input id="manual-price" type="number" min="0.01" max="1000000" step="0.01" required></label><button>Record price</button></form><p id="manual-status" role="status"></p><h3>Your observations</h3><p class="sub">Up to 60 saved checks. These are listing prices, not executed sales.${q?.volume ? ` Last Steam-reported volume: ${escape(q.volume)}.` : ""}</p>${
+    t`<div class="eyebrow">${escape(GAMES[item.appid])}</div><h2>${escape(item.name)}</h2><p>${number(item.quantity)} item(s) · recorded cost ${money(item.cost)} each · target ${money(item.target)}</p>${item.cost !== null ? t`<p>Estimated break-even buyer price: <strong>${money(buyerCost(item.cost))}</strong> each.</p>` : ""}<p class="notes">${escape(item.notes || t("No notes yet."))}</p><div class="actions"><button id="edit-current">Edit item</button><button id="remove-current">Remove from shelf</button></div><form class="manual" id="manual"><label>Record an observed EUR listing price<input id="manual-price" type="number" min="0.01" max="1000000" step="0.01" required></label><button>Record price</button></form><p id="manual-status" role="status"></p><h3>Your observations</h3><p class="sub">Up to 60 saved checks. These are listing prices, not executed sales.${q?.volume ? t` Last Steam-reported volume: ${escape(q.volume)}.` : ""}</p>${
       item.history.length
-        ? `<div class="table-wrap"><table class="history"><thead><tr><th>WHEN</th><th>PRICE</th><th>SOURCE</th></tr></thead><tbody>${[
+        ? t`<div class="table-wrap"><table class="history"><thead><tr><th>WHEN</th><th>PRICE</th><th>SOURCE</th></tr></thead><tbody>${[
             ...item.history,
           ]
             .reverse()
             .map(
               (s) =>
-                `<tr><td>${escape(date(s.at))}</td><td>${money(s.price)}</td><td>${s.source === "manual" ? "Manual" : "Steam quote"}</td></tr>`,
+                `<tr><td>${escape(date(s.at))}</td><td>${money(s.price)}</td><td>${s.source === "manual" ? t("Manual") : t("Steam quote")}</td></tr>`,
             )
             .join("")}</tbody></table></div>`
-        : "<p>No checks recorded yet.</p>"
+        : t("<p>No checks recorded yet.</p>")
     }`;
   $("#edit-current").onclick = () => {
     $("#details").close();
     openEditor(item);
   };
   $("#remove-current").onclick = () => {
-    if (!confirm(`Remove ${item.name} and its saved observations?`)) return;
+    if (!confirm(t`Remove ${item.name} and its saved observations?`)) return;
     items = items.filter((x) => x.id !== item.id);
     save();
     render();
@@ -174,7 +179,7 @@ function detail(item) {
       });
       detail(item);
     } catch (error) {
-      $("#manual-status").textContent = error.message;
+      $("#manual-status").textContent = errorText(error);
     }
   };
   if (!$("#details").open) $("#details").showModal();
@@ -186,13 +191,13 @@ function record(item, quote) {
   render();
   if (item.target !== null && quote.price <= item.target)
     notice(
-      `${item.name} is at or below your target: ${money(quote.price)}. Check the listing on Steam before deciding.`,
+      ()=>t`${item.name} is at or below your target: ${money(quote.price)}. Check the listing on Steam before deciding.`,
     );
 }
 async function check(id) {
   if (busy) return;
   if (Date.now() - lastRequest < 5000) {
-    notice("Wait a few seconds before another price check.");
+    notice(()=>t("Wait a few seconds before another price check."));
     return;
   }
   const item = items.find((x) => x.id === id);
@@ -200,29 +205,29 @@ async function check(id) {
   busy = true;
   lastRequest = Date.now();
   render();
-  notice(`Checking ${item.name}…`);
+  notice(()=>t`Checking ${item.name}…`);
   try {
     const response = await fetch(
       `/api/price?${new URLSearchParams({ appid: item.appid, name: item.name })}`,
       { signal: AbortSignal.timeout(12000) },
     );
     const quote = await response.json();
-    if (!response.ok) throw Error(quote.error || "Price unavailable.");
+    if (!response.ok) throw Error(quote.error || t("Price unavailable."));
     if (
       !Number.isSafeInteger(quote.price) ||
       quote.currency !== "EUR" ||
       !Number.isFinite(Date.parse(quote.at))
     )
-      throw Error("Unexpected quote format.");
+      throw Error(t("Unexpected quote format."));
     notice(
-      `Saved Steam quote for ${item.name}. Quotes may be cached for 10 minutes.`,
+      ()=>t`Saved Steam quote for ${item.name}. Quotes may be cached for 10 minutes.`,
     );
     record(item, quote);
   } catch (error) {
     notice(
-      error.name === "TimeoutError"
-        ? "The price request timed out. Your saved prices are unchanged."
-        : error.message,
+      ()=>error.name === "TimeoutError"
+        ? t("The price request timed out. Your saved prices are unchanged.")
+        : errorText(error),
     );
   } finally {
     busy = false;
@@ -248,15 +253,15 @@ $("#calculator").onsubmit = (e) => {
     const gross = cents($("#gross").value),
       net = netEstimate(gross);
     $("#calculation").textContent =
-      `Estimated proceeds: ${money(net)} · fees: ${money(gross - net)}`;
+      t`Estimated proceeds: ${money(net)} · fees: ${money(gross - net)}`;
   } catch (error) {
-    $("#calculation").textContent = error.message;
+    $("#calculation").textContent = errorText(error);
   }
 };
 function themeLabel() {
   $("#theme").setAttribute(
     "aria-label",
-    `Switch to ${document.documentElement.classList.contains("dark") ? "light" : "dark"} mode`,
+    document.documentElement.classList.contains("dark") ? t("Switch to light mode") : t("Switch to dark mode"),
   );
 }
 $("#theme").onclick = () => {
@@ -290,22 +295,35 @@ $("#import").onchange = async (e) => {
   if (!file) return;
   try {
     if (file.size > 500000)
-      throw Error("Backup is too large (maximum 500 KB).");
+      throw Error(t("Backup is too large (maximum 500 KB)."));
     const imported = validateBackup(JSON.parse(await file.text()));
     if (
       !confirm(
-        `Replace your ${items.length} saved item(s) with ${imported.length} from this backup?`,
+        t`Replace your ${number(items.length)} saved item(s) with ${number(imported.length)} from this backup?`,
       )
     )
       return;
     items = imported;
     save();
     render();
-    $("#backup-status").textContent = "Backup restored.";
+    $("#backup-status").textContent = t("Backup restored.");
   } catch (error) {
-    $("#backup-status").textContent = error.message;
+    $("#backup-status").textContent = errorText(error);
   } finally {
     e.target.value = "";
   }
 };
 render();
+
+function calculateInitial() {const gross=cents($("#gross").value);const net=netEstimate(gross);$("#calculation").textContent=t`Estimated proceeds: ${money(net)} · fees: ${money(gross-net)}`;}
+calculateInitial();
+
+document.addEventListener('languagechange',()=>{
+ const manualValue=$('#manual-price')?.value;
+ render();themeLabel();
+ try{calculateInitial()}catch(error){$('#calculation').textContent=errorText(error)}
+ $('#notice').textContent=noticeRenderer?noticeRenderer():'';
+ for(const id of ['form-error','backup-status']){const element=$('#'+id);element.textContent=refreshText(element.textContent)}
+ $('#editor-title').textContent=editing?t('Edit item'):t('Add an item');
+ if($('#details').open&&detailed){detail(detailed);if(manualValue!==undefined)$('#manual-price').value=manualValue;}
+});

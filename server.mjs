@@ -17,7 +17,7 @@ http
     if (url.pathname === "/api/price") return handler(req, res);
     const file = url.pathname === "/" ? "index.html" : url.pathname.slice(1);
     if (
-      !["index.html", "app.js", "core.js", "style.css", "theme.js"].includes(
+      !["index.html", "app.js", "core.js", "i18n.js", "messages.js", "style.css", "theme.js"].includes(
         file,
       )
     ) {

@@ -712,3 +712,10 @@ textarea {
     padding: 18px;
   }
 }
+
+/* Native language control stays usable on narrow screens. */
+header { gap: 12px; flex-wrap: wrap; }
+.language-picker { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.language-picker select { width: auto; max-width: 160px; margin: 0; padding: 8px; font: inherit; color: inherit; background: transparent; border: 1px solid currentColor; border-radius: 6px; }
+.language-picker option { color: #111; background: #fff; }
+@media(max-width:420px) { .language-picker > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); } }

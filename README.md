@@ -41,3 +41,7 @@ This app does not trade, connect a wallet, boost hours or automate Steam gamepla
 ## License
 
 Original project code is available under the [MIT License](LICENSE), copyright © 2026 Patrick Obrtal. Third-party components retain their own licenses.
+
+The interface supports English, Slovak, Hungarian, Polish, German, Spanish and Czech. The native language selector saves its choice in this browser, otherwise the app uses the first supported browser language and falls back to English. Language changes preserve saved items, notes and editor values. Dates, numbers and EUR values follow the selected locale. Steam item/game names and personal notes remain unchanged.
+
+Translations live in `public/messages.js`. `public/i18n.js` translates explicitly marked static labels and authored template segments before inserting source values. It does not translate arbitrary page content or call an external translation service. API and validation errors are mapped locally, with a localized fallback for unknown errors. Price checks remain manual, with no background monitoring or notifications while the app is closed.

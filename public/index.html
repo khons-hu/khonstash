@@ -8,61 +8,61 @@
       content="A small Steam item watchlist. Check prices, keep notes and see what remains after fees."
     />
     <meta name="theme-color" content="#090f16" />
-    <title>Khonstash · Keep an eye on your items</title>
+    <title data-i18n="Khonstash · Keep an eye on your items">Khonstash · Keep an eye on your items</title>
     <script src="/theme.js"></script>
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
     <header>
       <a class="brand" href="/"
-        >◈ <span>Khonstash<small>BY KHONSU</small></span></a
-      ><button id="theme" aria-label="Toggle colour theme">◐</button>
+        >◈ <span>Khonstash<small data-i18n="BY KHONSU">BY KHONSU</small></span></a
+      ><label class="language-picker"><span data-i18n="Language">Language</span><select id="language" aria-label="Language" data-i18n-aria-label="Language"></select></label><button id="theme" aria-label="Toggle colour theme" data-i18n-aria-label="Toggle colour theme">◐</button>
     </header>
     <main>
       <section class="intro">
         <div>
-          <div class="eyebrow">INVENTORY, WITH A LITTLE PERSPECTIVE</div>
-          <h1>Nice skin.<br /><span>What’s it actually worth?</span></h1>
-          <p>Keep a shortlist. Check the price. Remember the fees.</p>
+          <div class="eyebrow"><span data-i18n="INVENTORY, WITH A LITTLE PERSPECTIVE">INVENTORY, WITH A LITTLE PERSPECTIVE</span></div>
+          <h1><span data-i18n="Nice skin.">Nice skin.</span><br /><span><span data-i18n="What’s it actually worth?">What’s it actually worth?</span></span></h1>
+          <p><span data-i18n="Keep a shortlist. Check the price. Remember the fees.">Keep a shortlist. Check the price. Remember the fees.</span></p>
         </div>
         <aside class="read-only">
-          Read-only. No Steam login.<br />Your list stays in this browser.
+          <span data-i18n="Read-only. No Steam login.">Read-only. No Steam login.</span><br /><span data-i18n="Your list stays in this browser.">Your list stays in this browser.</span>
         </aside>
       </section>
       <div class="toolbar">
-        <button class="primary" id="add">+ Add an item</button
-        ><button id="backup">Backup & restore</button
+        <button class="primary" id="add"><span data-i18n="+ Add an item">+ Add an item</span></button
+        ><button id="backup"><span data-i18n="Backup &amp; restore">Backup & restore</span></button
         ><a
           href="https://steamcommunity.com/market/"
           target="_blank"
           rel="noopener noreferrer"
-          >Open Steam Market ↗</a
+          ><span data-i18n="Open Steam Market ↗">Open Steam Market ↗</span></a
         >
       </div>
       <p id="notice" role="status" aria-live="polite"></p>
-      <section class="totals" aria-label="Watchlist estimates">
+      <section class="totals" aria-label="Watchlist estimates" data-i18n-aria-label="Watchlist estimates">
         <div>
-          <small>RECORDED COST</small><strong id="cost-total">€0.00</strong>
+          <small><span data-i18n="RECORDED COST">RECORDED COST</span></small><strong id="cost-total">€0.00</strong>
         </div>
         <div>
-          <small>ESTIMATED WALLET PROCEEDS</small
+          <small><span data-i18n="ESTIMATED WALLET PROCEEDS">ESTIMATED WALLET PROCEEDS</span></small
           ><strong id="net-total">—</strong>
         </div>
         <div>
-          <small>DIFFERENCE · PRICED ITEMS</small
+          <small><span data-i18n="DIFFERENCE · PRICED ITEMS">DIFFERENCE · PRICED ITEMS</span></small
           ><strong id="difference">—</strong>
         </div>
       </section>
-      <p class="sub" id="coverage">Add items to start your list.</p>
-      <section id="items" aria-label="Watched items"></section>
+      <p class="sub" id="coverage"><span data-i18n="Add items to start your list.">Add items to start your list.</span></p>
+      <section id="items" aria-label="Watched items" data-i18n-aria-label="Watched items"></section>
       <section class="bottom-grid">
         <article class="panel">
-          <div class="eyebrow">BEFORE YOU BUY</div>
-          <h2>Run the numbers.</h2>
-          <p>A €10 listing does not put €10 back in your wallet.</p>
+          <div class="eyebrow"><span data-i18n="BEFORE YOU BUY">BEFORE YOU BUY</span></div>
+          <h2><span data-i18n="Run the numbers.">Run the numbers.</span></h2>
+          <p><span data-i18n="A €10 listing does not put €10 back in your wallet.">A €10 listing does not put €10 back in your wallet.</span></p>
           <form id="calculator">
             <label
-              >What the buyer pays (€)<input
+              ><span data-i18n="What the buyer pays (€)">What the buyer pays (€)</span><input
                 id="gross"
                 type="number"
                 min="0"
@@ -70,89 +70,89 @@
                 step="0.01"
                 value="10"
                 required /></label
-            ><button>Calculate</button>
+            ><button><span data-i18n="Calculate">Calculate</span></button>
           </form>
           <output id="calculation"
             >Estimated proceeds: €8.70 · fees: €1.30</output
           >
           <p class="sub">
-            Estimate using 5% Steam + 10% game fees with cent rounding. Confirm
-            the exact amount in Steam’s sell dialog.
+            <span data-i18n="Estimate using 5% Steam + 10% game fees with cent rounding. Confirm the exact amount in Steam’s sell dialog.">Estimate using 5% Steam + 10% game fees with cent rounding. Confirm
+            the exact amount in Steam’s sell dialog.</span>
           </p>
         </article>
         <article class="panel">
-          <div class="eyebrow">A FEW THINGS TO CHECK</div>
-          <h2>The cheapest listing isn’t a sale.</h2>
+          <div class="eyebrow"><span data-i18n="A FEW THINGS TO CHECK">A FEW THINGS TO CHECK</span></div>
+          <h2><span data-i18n="The cheapest listing isn’t a sale.">The cheapest listing isn’t a sale.</span></h2>
           <ul>
-            <li>Check buy orders, recent sales and volume on Steam.</li>
+            <li><span data-i18n="Check buy orders, recent sales and volume on Steam.">Check buy orders, recent sales and volume on Steam.</span></li>
             <li>
-              Write down why you want an item and what would change your mind.
+              <span data-i18n="Write down why you want an item and what would change your mind.">Write down why you want an item and what would change your mind.</span>
             </li>
-            <li>Account for fees, trade holds and the time needed to sell.</li>
+            <li><span data-i18n="Account for fees, trade holds and the time needed to sell.">Account for fees, trade holds and the time needed to sell.</span></li>
           </ul>
           <p class="sub">
-            Proceeds stay in Steam Wallet. They are not withdrawable cash. This
-            app does not rank “investments” or promise returns.
+            <span data-i18n="Proceeds stay in Steam Wallet. They are not withdrawable cash. This app does not rank “investments” or promise returns.">Proceeds stay in Steam Wallet. They are not withdrawable cash. This
+            app does not rank “investments” or promise returns.</span>
           </p>
           <a
             href="https://help.steampowered.com/en/faqs/view/61F0-72B7-9A18-C70B"
             target="_blank"
             rel="noopener noreferrer"
-            >Steam Market FAQ ↗</a
+            ><span data-i18n="Steam Market FAQ ↗">Steam Market FAQ ↗</span></a
           >
         </article>
       </section>
       <details class="about">
-        <summary>How prices and alerts work</summary>
+        <summary><span data-i18n="How prices and alerts work">How prices and alerts work</span></summary>
         <p>
-          Check price requests an EUR quote from Steam’s public, undocumented
+          <span data-i18n="Check price requests an EUR quote from Steam’s public, undocumented price overview endpoint. Quotes may be cached for 10 minutes. Steam can limit or stop access. No login, proxy rotation or account cookies are used.">Check price requests an EUR quote from Steam’s public, undocumented
           price overview endpoint. Quotes may be cached for 10 minutes. Steam
           can limit or stop access. No login, proxy rotation or account cookies
-          are used.
+          are used.</span>
         </p>
         <p>
-          History starts with your own checks, up to 60 observations per item.
+          <span data-i18n="History starts with your own checks, up to 60 observations per item. It is not Steam’s historical chart. Manual observations are labelled. Target notices appear here after a check, with no background polling or closed-app notifications.">History starts with your own checks, up to 60 observations per item.
           It is not Steam’s historical chart. Manual observations are labelled.
           Target notices appear here after a check, with no background polling
-          or closed-app notifications.
+          or closed-app notifications.</span>
         </p>
         <p>
-          Up to 12 items are saved locally. Export a backup before changing
+          <span data-i18n="Up to 12 items are saved locally. Export a backup before changing browsers or clearing site data. Import replaces this app’s list after confirmation. No analytics, paid API or AI calls.">Up to 12 items are saved locally. Export a backup before changing
           browsers or clearing site data. Import replaces this app’s list after
-          confirmation. No analytics, paid API or AI calls.
+          confirmation. No analytics, paid API or AI calls.</span>
         </p>
       </details>
       <footer>
-        Built by <a href="https://khons-hu.vercel.app/">khonsu</a> ·
-        <a href="https://github.com/khons-hu/khonstash">Source on GitHub</a> ·
-        Independent project, not affiliated with Valve.
+        <span data-i18n="Built by">Built by</span> <a href="https://khons-hu.vercel.app/">khonsu</a> ·
+        <a href="https://github.com/khons-hu/khonstash"><span data-i18n="Source on GitHub">Source on GitHub</span></a> <span data-i18n="· Independent project, not affiliated with Valve.">·
+        Independent project, not affiliated with Valve.</span>
       </footer>
     </main>
     <dialog id="edit">
-      <button class="close" data-close aria-label="Close item editor">×</button>
-      <h2 id="editor-title">Add an item</h2>
+      <button class="close" data-close aria-label="Close item editor" data-i18n-aria-label="Close item editor">×</button>
+      <h2 id="editor-title"><span data-i18n="Add an item">Add an item</span></h2>
       <form id="item-form">
         <label
-          >Game<select name="appid">
+          ><span data-i18n="Game">Game</span><select name="appid">
             <option value="730">Counter-Strike 2</option>
             <option value="570">Dota 2</option>
             <option value="440">Team Fortress 2</option>
             <option value="252490">Rust</option>
           </select></label
         ><label
-          >Exact market name<input
+          ><span data-i18n="Exact market name">Exact market name</span><input
             name="name"
             required
             maxlength="180"
             placeholder="Revolution Case"
         /></label>
         <p class="sub">
-          Copy the name from its Steam listing, including wear or StatTrak™ if
-          present.
+          <span data-i18n="Copy the name from its Steam listing, including wear or StatTrak™ if present.">Copy the name from its Steam listing, including wear or StatTrak™ if
+          present.</span>
         </p>
         <div class="fields">
           <label
-            >Quantity<input
+            ><span data-i18n="Quantity">Quantity</span><input
               name="quantity"
               type="number"
               min="1"
@@ -160,53 +160,53 @@
               value="1"
               required /></label
           ><label
-            >Cost per item (€)<input
+            ><span data-i18n="Cost per item (€)">Cost per item (€)</span><input
               name="cost"
               type="number"
               min="0"
               max="1000000"
               step="0.01"
-              placeholder="Optional" /></label
+              placeholder="Optional" / data-i18n-placeholder="Optional"></label
           ><label
-            >Alert at or below (€)<input
+            ><span data-i18n="Alert at or below (€)">Alert at or below (€)</span><input
               name="target"
               type="number"
               min="0"
               max="1000000"
               step="0.01"
               placeholder="Optional"
-          /></label>
+          / data-i18n-placeholder="Optional"></label>
         </div>
         <label
-          >Your reasoning<textarea
+          ><span data-i18n="Your reasoning">Your reasoning</span><textarea
             name="notes"
             maxlength="2000"
             placeholder="Why this item? What would change your mind?"
-          ></textarea>
+           data-i18n-placeholder="Why this item? What would change your mind?"></textarea>
         </label>
         <p id="form-error" role="alert"></p>
-        <button class="primary">Save item</button>
+        <button class="primary"><span data-i18n="Save item">Save item</span></button>
       </form>
     </dialog>
     <dialog id="details">
-      <button class="close" data-close aria-label="Close item details">
+      <button class="close" data-close aria-label="Close item details" data-i18n-aria-label="Close item details">
         ×
       </button>
       <div id="detail-content"></div>
     </dialog>
     <dialog id="backup-dialog">
-      <button class="close" data-close aria-label="Close backup">×</button>
-      <h2>Keep a copy.</h2>
-      <p>Your watchlist and notes live in this browser.</p>
-      <button id="export">Download backup</button
+      <button class="close" data-close aria-label="Close backup" data-i18n-aria-label="Close backup">×</button>
+      <h2><span data-i18n="Keep a copy.">Keep a copy.</span></h2>
+      <p><span data-i18n="Your watchlist and notes live in this browser.">Your watchlist and notes live in this browser.</span></p>
+      <button id="export"><span data-i18n="Download backup">Download backup</span></button
       ><label class="import"
-        >Restore a JSON backup<input
+        ><span data-i18n="Restore a JSON backup">Restore a JSON backup</span><input
           type="file"
           id="import"
           accept="application/json,.json"
       /></label>
       <p>
-        Restoring replaces this app’s current list. You’ll be asked to confirm.
+        <span data-i18n="Restoring replaces this app’s current list. You’ll be asked to confirm.">Restoring replaces this app’s current list. You’ll be asked to confirm.</span>
       </p>
       <p id="backup-status" role="status"></p>
     </dialog>
