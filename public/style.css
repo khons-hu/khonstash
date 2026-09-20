@@ -719,3 +719,6 @@ header { gap: 12px; flex-wrap: wrap; }
 .language-picker select { width: auto; max-width: 160px; margin: 0; padding: 8px; font: inherit; color: inherit; background: transparent; border: 1px solid currentColor; border-radius: 6px; }
 .language-picker option { color: #111; background: #fff; }
 @media(max-width:420px) { .language-picker > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); } }
+
+/* Keep touch form text readable without Safari focus zoom. Pinch zoom stays enabled. */
+@media (pointer:coarse){input:not([type=checkbox]):not([type=radio]),select,textarea{font-size:16px!important}button,select{min-height:44px}dialog{overflow-y:auto;overscroll-behavior:contain}}
