@@ -2,7 +2,9 @@
 
 A small Steam item watchlist. Check prices, keep your reasoning next to an item, and see what remains after fees.
 
-**[Open the app](https://steam-shelf-khonsu.vercel.app/)** · [Portfolio](https://khons-hu.vercel.app/)
+Deployment is prepared for Vercel. The public URL will be added after deployment is verified.
+
+[Portfolio](https://khons-hu.vercel.app/)
 
 ## What it does
 

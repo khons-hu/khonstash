@@ -1,4 +1,62 @@
-import test from 'node:test';import assert from 'node:assert/strict';import handler from '../api/price.js';
-function res(){return {headers:{},setHeader(k,v){this.headers[k]=v},status(n){this.code=n;return this},json(v){this.body=v;return this}}}
-test('rejects writes and invalid parameters without contacting Steam',async()=>{let r=res();await handler({method:'POST',url:'/api/price'},r);assert.equal(r.code,405);r=res();await handler({method:'GET',url:'/api/price?appid=999&name=test'},r);assert.equal(r.code,400)});
-test('normalizes a quote and serves cached result',async()=>{const original=global.fetch;let calls=0;global.fetch=async url=>{calls++;assert.equal(url.hostname,'steamcommunity.com');assert.equal(url.searchParams.get('currency'),'3');return {ok:true,status:200,text:async()=>JSON.stringify({success:true,lowest_price:'0,26€',median_price:'0,25€',volume:'123'})}};try{let r=res();await handler({method:'GET',url:'/api/price?appid=730&name=Test'},r);assert.equal(r.code,200);assert.equal(r.body.price,26);r=res();await handler({method:'GET',url:'/api/price?appid=730&name=Test'},r);assert.equal(calls,1);assert.equal(r.body.currency,'EUR');r=res();await handler({method:'GET',url:'/api/price?appid=730&name=Other'},r);assert.equal(r.code,429);}finally{global.fetch=original;}});
+import test from "node:test";
+import assert from "node:assert/strict";
+import handler from "../api/price.js";
+function res() {
+  return {
+    headers: {},
+    setHeader(k, v) {
+      this.headers[k] = v;
+    },
+    status(n) {
+      this.code = n;
+      return this;
+    },
+    json(v) {
+      this.body = v;
+      return this;
+    },
+  };
+}
+test("rejects writes and invalid parameters without contacting Steam", async () => {
+  let r = res();
+  await handler({ method: "POST", url: "/api/price" }, r);
+  assert.equal(r.code, 405);
+  r = res();
+  await handler({ method: "GET", url: "/api/price?appid=999&name=test" }, r);
+  assert.equal(r.code, 400);
+});
+test("normalizes a quote and serves cached result", async () => {
+  const original = global.fetch;
+  let calls = 0;
+  global.fetch = async (url) => {
+    calls++;
+    assert.equal(url.hostname, "steamcommunity.com");
+    assert.equal(url.searchParams.get("currency"), "3");
+    return {
+      ok: true,
+      status: 200,
+      text: async () =>
+        JSON.stringify({
+          success: true,
+          lowest_price: "0,26€",
+          median_price: "0,25€",
+          volume: "123",
+        }),
+    };
+  };
+  try {
+    let r = res();
+    await handler({ method: "GET", url: "/api/price?appid=730&name=Test" }, r);
+    assert.equal(r.code, 200);
+    assert.equal(r.body.price, 26);
+    r = res();
+    await handler({ method: "GET", url: "/api/price?appid=730&name=Test" }, r);
+    assert.equal(calls, 1);
+    assert.equal(r.body.currency, "EUR");
+    r = res();
+    await handler({ method: "GET", url: "/api/price?appid=730&name=Other" }, r);
+    assert.equal(r.code, 429);
+  } finally {
+    global.fetch = original;
+  }
+});
