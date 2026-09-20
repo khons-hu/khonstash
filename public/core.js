@@ -70,7 +70,7 @@ export function validateBackup(data) {
     !Array.isArray(data.items) ||
     data.items.length > 12
   )
-    throw Error("Use a Steam Shelf backup with at most 12 items.");
+    throw Error("Use a Khonstash backup with at most 12 items.");
   const keys = new Set();
   return data.items.map((raw) => {
     const item = validateItem(raw),

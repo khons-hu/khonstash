@@ -1,5 +1,5 @@
 {
-  "name": "steam-shelf",
+  "name": "khonstash",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -10,5 +10,6 @@
   },
   "engines": {
     "node": ">=20"
-  }
+  },
+  "license": "MIT"
 }

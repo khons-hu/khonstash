@@ -34,5 +34,5 @@ http
     }
   })
   .listen(process.env.PORT || 4176, "127.0.0.1", () =>
-    console.log("Steam Shelf: http://localhost:" + (process.env.PORT || 4176)),
+    console.log("Khonstash: http://localhost:" + (process.env.PORT || 4176)),
   );

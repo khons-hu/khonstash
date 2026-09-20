@@ -1,4 +1,4 @@
-# Steam Shelf
+# Khonstash
 
 A small Steam item watchlist. Check prices, keep your reasoning next to an item, and see what remains after fees.
 
@@ -37,3 +37,7 @@ No paid API, database, model calls or account system. Hosting is subject to your
 Watchlists, cost and notes stay in localStorage. A price check sends only the game's app ID and item name to this app's server, which requests a public EUR quote from Steam. Hosting providers may retain ordinary request logs. No analytics or tracking SDKs.
 
 This app does not trade, connect a wallet, boost hours or automate Steam gameplay. Independent project, not affiliated with Valve.
+
+## License
+
+Original project code is available under the [MIT License](LICENSE), copyright © 2026 Patrick Obrtal. Third-party components retain their own licenses.
