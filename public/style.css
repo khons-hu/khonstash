@@ -722,3 +722,6 @@ header { gap: 12px; flex-wrap: wrap; }
 
 /* Keep touch form text readable without Safari focus zoom. Pinch zoom stays enabled. */
 @media (pointer:coarse){input:not([type=checkbox]):not([type=radio]),select,textarea{font-size:16px!important}button,select{min-height:44px}dialog{overflow-y:auto;overscroll-behavior:contain}}
+
+/* Motion preference: System follows the OS. On and Off are explicit visitor choices. */
+.motion-control{white-space:nowrap;font-size:11px!important}.motion-off *,.motion-off *::before,.motion-off *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}@media(prefers-reduced-motion:reduce){html:not(.motion-force-on){scroll-behavior:auto}html:not(.motion-force-on) *,html:not(.motion-force-on) *::before,html:not(.motion-force-on) *::after{animation:none!important;transition:none!important}}
